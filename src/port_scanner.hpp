@@ -6,11 +6,13 @@
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 
+using namespace std;
+
 struct PortInfo {
     int port_number;
-    std::string protocol;
-    std::string state;
-    std::string service;
+    string protocol;
+    string state;
+    string service;
 };
 
 class PortScanner {
@@ -18,26 +20,22 @@ public:
     PortScanner();
     ~PortScanner();
 
-    // Configure le scan
-    void setTarget(const std::string& target);
+    void setTarget(const string& target);
     void setPortRange(int start_port, int end_port);
     
-    // Exécute le scan
     bool scan();
     
-    // Récupère les résultats
-    const std::vector<PortInfo>& getResults() const;
+    const vector<PortInfo>& getResults() const;
 
 private:
-    std::string target_;
+    string target_;
     int start_port_;
     int end_port_;
-    std::vector<PortInfo> results_;
+    vector<PortInfo> results_;
 
-    // Méthodes privées pour le traitement
-    bool executeNmapCommand(std::string& output);
-    bool parseXmlOutput(const std::string& xml_content);
+    bool executeNmapCommand(string& output);
+    bool parseXmlOutput(const string& xml_content);
     void parsePort(xmlNode* port_node);
 };
 
-#endif // PORT_SCANNER_HPP 
+#endif

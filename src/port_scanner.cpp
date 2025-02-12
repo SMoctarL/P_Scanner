@@ -6,6 +6,7 @@
 #include <sstream>
 #include <iostream>
 
+using namespace std;
 using pclose_deleter = int(*)(FILE*);
 
 PortScanner::PortScanner() : start_port_(1), end_port_(1024) {
@@ -16,7 +17,7 @@ PortScanner::~PortScanner() {
     xmlCleanupParser();
 }
 
-void PortScanner::setTarget(const std::string& target) {
+void PortScanner::setTarget(const string& target) {
     target_ = target;
 }
 
@@ -27,19 +28,18 @@ void PortScanner::setPortRange(int start_port, int end_port) {
 
 bool PortScanner::scan() {
     results_.clear();
-    std::string output;
+    string output;
     
     if (!executeNmapCommand(output)) {
-        std::cerr << "Erreur lors de l'exécution de nmap" << std::endl;
+        cerr << "Erreur lors de l'exécution de nmap" << endl;
         return false;
     }
 
     return parseXmlOutput(output);
 }
 
-bool PortScanner::executeNmapCommand(std::string& output) {
-    // Construire la commande nmap
-    std::stringstream cmd;
+bool PortScanner::executeNmapCommand(string& output) {
+    stringstream cmd;
     #ifdef _WIN32
     cmd << "nmap -p " << start_port_ << "-" << end_port_ 
         << " -oX - " << target_;
@@ -48,14 +48,13 @@ bool PortScanner::executeNmapCommand(std::string& output) {
         << " -oX - " << target_ << " 2>/dev/null";
     #endif
 
-    // Exécuter la commande
-    std::array<char, 128> buffer;
-    std::string result;
-    std::unique_ptr<FILE, pclose_deleter> pipe(
+    array<char, 128> buffer;
+    string result;
+    unique_ptr<FILE, pclose_deleter> pipe(
         popen(cmd.str().c_str(), "r"), pclose);
 
     if (!pipe) {
-        std::cerr << "Erreur: Impossible d'exécuter nmap. Assurez-vous qu'il est installé et que vous avez les droits root." << std::endl;
+        cerr << "Erreur: Impossible d'exécuter nmap. Assurez-vous qu'il est installé et que vous avez les droits root." << endl;
         return false;
     }
 
@@ -64,14 +63,14 @@ bool PortScanner::executeNmapCommand(std::string& output) {
     }
 
     if (output.empty()) {
-        std::cerr << "Attention: Aucune donnée reçue de nmap. Vérifiez que vous avez les droits root." << std::endl;
+        cerr << "Attention: Aucune donnée reçue de nmap. Vérifiez que vous avez les droits root." << endl;
         return false;
     }
 
     return true;
 }
 
-bool PortScanner::parseXmlOutput(const std::string& xml_content) {
+bool PortScanner::parseXmlOutput(const string& xml_content) {
     xmlDoc* doc = xmlReadMemory(xml_content.c_str(), xml_content.length(), 
                                nullptr, nullptr, 0);
     if (doc == nullptr) {
@@ -111,7 +110,6 @@ bool PortScanner::parseXmlOutput(const std::string& xml_content) {
 void PortScanner::parsePort(xmlNode* port_node) {
     PortInfo info;
     
-    // Récupérer les attributs du port
     xmlChar* portid = xmlGetProp(port_node, (const xmlChar*)"portid");
     xmlChar* protocol = xmlGetProp(port_node, (const xmlChar*)"protocol");
     
@@ -125,7 +123,6 @@ void PortScanner::parsePort(xmlNode* port_node) {
         xmlFree(protocol);
     }
 
-    // Parcourir les éléments enfants pour l'état et le service
     for (xmlNode* child = port_node->children; child; child = child->next) {
         if (child->type == XML_ELEMENT_NODE) {
             if (xmlStrcmp(child->name, (const xmlChar*)"state") == 0) {
