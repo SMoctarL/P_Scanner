@@ -4,8 +4,8 @@ Un scanner de ports simple utilisant nmap et libxml2 pour analyser les ports ouv
 
 ## Prérequis
 
-- CMake (version 3.10 ou supérieure)
-- Compilateur C++ supportant C++17
+- CMake 
+- Compilateur C++
 - nmap
 - libxml2-dev
 
@@ -58,11 +58,11 @@ Exemple :
 
 ## Fonctionnalités
 
-- Scan des ports 1-1024 (ports bien connus)
+- Scan des ports 1-1024 
 - Détection du protocole (TCP/UDP)
 - Identification des services
 - Affichage formaté des résultats
 
 ## Note de sécurité
 
-Ce programme nécessite les privilèges administrateur pour fonctionner correctement avec nmap. Utilisez-le de manière responsable et uniquement sur des systèmes pour lesquels vous avez l'autorisation de faire des tests. 
+Ce programme nécessite les privilèges administrateur pour fonctionner correctement avec nmap. Utilisez-le de manière responsable et uniquement sur des systèmes pour lesquels vous avez l'autorisation de faire des tests. by Moctar
