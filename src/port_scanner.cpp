@@ -83,7 +83,7 @@ bool PortScanner::parseXmlOutput(const string& xml_content) {
         return false;
     }
 
-    // Parcourir le document XML
+    // Parcourons le document XML
     for (xmlNode* host = root->children; host; host = host->next) {
         if (host->type == XML_ELEMENT_NODE && 
             xmlStrcmp(host->name, (const xmlChar*)"host") == 0) {
